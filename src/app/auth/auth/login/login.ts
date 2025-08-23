@@ -30,9 +30,9 @@ export class Login {
 
     this.auth.login(username, password).subscribe(success => {
       if (success) {
-        this.router.navigate(['/turnos']); // ✅ redirige al componente Turnos
+        this.router.navigate(['/turnos']); 
       } else {
-        alert('Datos incorrectos'); // ❌ muestra ventana emergente
+        alert('Datos incorrectos');
       }
     });
   }
