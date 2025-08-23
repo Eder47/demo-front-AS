@@ -14,7 +14,11 @@ import { CommonModule } from '@angular/common';
 export class Login {
   form!: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private auth: Auth,
+    private router: Router
+  ) {
     this.form = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
@@ -22,6 +26,14 @@ export class Login {
   }
 
   login() {
-    console.log(this.form.value);
+    const { username, password } = this.form.value;
+
+    this.auth.login(username, password).subscribe(success => {
+      if (success) {
+        this.router.navigate(['/turnos']); // ✅ redirige al componente Turnos
+      } else {
+        alert('Datos incorrectos'); // ❌ muestra ventana emergente
+      }
+    });
   }
 }

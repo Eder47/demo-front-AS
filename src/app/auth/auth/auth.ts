@@ -5,11 +5,18 @@ import { Observable, of } from 'rxjs';
   providedIn: 'root'
 })
 export class Auth {
-   constructor() { }
+  private readonly USER = 'admin';
+  private readonly PASS = '1234';
 
-  // Método login simulado
+  constructor() {}
+
   login(username: string, password: string): Observable<boolean> {
     console.log('Usuario:', username, 'Password:', password);
-    return of(true); // siempre devuelve true por ahora
+
+    if (username === this.USER && password === this.PASS) {
+      return of(true); 
+    } else {
+      return of(false); 
+    }
   }
 }
