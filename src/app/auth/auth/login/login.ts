@@ -27,10 +27,11 @@ export class Login {
 
   login() {
     const { username, password } = this.form.value;
-
     this.auth.login(username, password).subscribe(success => {
       if (success) {
-        this.router.navigate(['/turnos']); 
+        this.router.navigateByUrl('/turnos').then(() => {
+          window.location.reload();
+        });
       } else {
         alert('Datos incorrectos');
       }

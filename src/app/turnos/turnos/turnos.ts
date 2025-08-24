@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { TurnosService } from '../../servicios/turno.service';
 import { GenerarTurnosRequest } from '../../interfaces/GenerarTurnosRequest';
 import { Turno } from '../../interfaces/Turno';
+import { Comercio } from '../../interfaces/Comercio';
+import { Servicio } from '../../interfaces/Servicio';
 
 @Component({
   selector: 'app-turnos',
@@ -19,9 +21,10 @@ import { Turno } from '../../interfaces/Turno';
 export class Turnos implements OnInit{
   form!: FormGroup;
 
-  comercios: any[] = [];
-  servicios: any[] = [];
+  comercios: Comercio[] = [];
+  servicios: Servicio[] = [];
   turnos: Turno[] = [];
+  serviciosFiltrados: Servicio[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -52,6 +55,16 @@ export class Turnos implements OnInit{
     });
   }
 
+  onComercioChange() {
+  const selectedComercioId = Number(this.form.get('comercio')?.value);
+  if (selectedComercioId) {
+    this.serviciosFiltrados = this.servicios.filter(s => s.comercioId === selectedComercioId);
+  } else {
+    this.serviciosFiltrados = [];
+  }
+  this.form.get('servicio')?.setValue('');
+}
+
 generar() {
   if (this.form.invalid) return;
 
@@ -68,7 +81,7 @@ generar() {
 this.turnosService.listaTurnos(request).subscribe({
   next: data => {
     this.turnos = data.filter(t => t.comercioId === Number(comercio));
-    this.cdr.detectChanges(); // fuerza refresco de la vista
+    this.cdr.detectChanges(); 
   },
   error: err => console.error('Error generando turnos', err)
 });

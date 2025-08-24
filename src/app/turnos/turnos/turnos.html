@@ -2,11 +2,10 @@
   <h2>Genera Turnos</h2>
 
   <form [formGroup]="form" (ngSubmit)="generar()">
-    <!-- Primera fila -->
     <div class="row">
       <div class="form-group">
         <label for="comercio">Comercio</label>
-        <select id="comercio" formControlName="comercio">
+        <select id="comercio" formControlName="comercio" (change)="onComercioChange()">
           <option value="">Seleccione un comercio</option>
           <option *ngFor="let c of comercios" [value]="c.id">{{ c.nombreComercio }}</option>
         </select>
@@ -16,12 +15,12 @@
         <label for="servicio">Servicio</label>
         <select id="servicio" formControlName="servicio">
           <option value="">Seleccione un servicio</option>
-          <option *ngFor="let s of servicios" [value]="s.id">{{ s.nombreServicio }}</option>
+          <option *ngFor="let s of serviciosFiltrados" [value]="s.id">{{ s.nombreServicio }}</option>
         </select>
-      </div>
     </div>
 
-    <!-- Segunda fila -->
+    </div>
+
     <div class="row">
       <div class="form-group">
         <label for="fechaInicio">Fecha inicial</label>
