@@ -8,7 +8,7 @@
         <label for="comercio">Comercio</label>
         <select id="comercio" formControlName="comercio">
           <option value="">Seleccione un comercio</option>
-          <option *ngFor="let c of comercios" [value]="c.id">{{ c.nombre }}</option>
+          <option *ngFor="let c of comercios" [value]="c.id">{{ c.nombreComercio }}</option>
         </select>
       </div>
 
@@ -16,7 +16,7 @@
         <label for="servicio">Servicio</label>
         <select id="servicio" formControlName="servicio">
           <option value="">Seleccione un servicio</option>
-          <option *ngFor="let s of servicios" [value]="s.id">{{ s.nombre }}</option>
+          <option *ngFor="let s of servicios" [value]="s.id">{{ s.nombreServicio }}</option>
         </select>
       </div>
     </div>
@@ -37,7 +37,6 @@
     </div>
   </form>
 
-  <!-- Tabla -->
   <div class="tabla-container" *ngIf="turnos.length > 0">
     <table>
       <thead>
@@ -51,9 +50,9 @@
       </thead>
       <tbody>
         <tr *ngFor="let t of turnos">
-          <td>{{ t.comercio }}</td>
-          <td>{{ t.servicio }}</td>
-          <td>{{ t.fecha }}</td>
+          <td>{{ t.nombreComercio }}</td>
+          <td>{{ t.nombreServicio }}</td>
+          <td>{{ t.fechaTurno }}</td>
           <td>{{ t.horaInicio }}</td>
           <td>{{ t.horaFin }}</td>
         </tr>

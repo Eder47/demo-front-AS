@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Servicio } from "../interfaces/Servicio";
 import { Turno } from "../interfaces/Turno";
+import { GenerarTurnosRequest } from "../interfaces/GenerarTurnosRequest";
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +22,9 @@ export class TurnosService {
   listaServicios(): Observable<Servicio[]> {
     return this.http.get<Servicio[]>(`${this.baseUrl}/lista-servicio`);
   }
+listaTurnos(request: GenerarTurnosRequest): Observable<Turno[]> {
+  return this.http.post<Turno[]>(`${this.baseUrl}/generar`, request);
+}
 
-  listaTurnos(): Observable<Turno[]> {
-    return this.http.get<Turno[]>(`${this.baseUrl}/generar`);
-  }
+
 }

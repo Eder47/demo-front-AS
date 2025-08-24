@@ -1,33 +1,34 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Router } from '@angular/router';
+import { TurnosService } from '../../servicios/turno.service';
+import { GenerarTurnosRequest } from '../../interfaces/GenerarTurnosRequest';
+import { Turno } from '../../interfaces/Turno';
 
 @Component({
   selector: 'app-turnos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule], // ✅ importa ReactiveFormsModule
+  imports: [
+    CommonModule,
+    ReactiveFormsModule
+  ],
   templateUrl: './turnos.html',
   styleUrls: ['./turnos.css']
 })
-export class Turnos {
+export class Turnos implements OnInit{
   form!: FormGroup;
 
-  // Datos simulados - luego se cargan desde un servicio en Java
-  comercios = [
-    { id: 1, nombre: 'Comercio A' },
-    { id: 2, nombre: 'Comercio B' },
-    { id: 3, nombre: 'Comercio C' }
-  ];
+  comercios: any[] = [];
+  servicios: any[] = [];
+  turnos: Turno[] = [];
 
-  servicios = [
-    { id: 1, nombre: 'Servicio X' },
-    { id: 2, nombre: 'Servicio Y' },
-    { id: 3, nombre: 'Servicio Z' }
-  ];
-
-  turnos: any[] = []; // aquí irán los resultados de la búsqueda
-
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private turnosService: TurnosService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {
     this.form = this.fb.group({
       comercio: ['', Validators.required],
       servicio: ['', Validators.required],
@@ -35,25 +36,44 @@ export class Turnos {
       fechaFin: ['', Validators.required]
     });
   }
-  
-
-  generar() {
-    // Simulación - en la práctica harías una llamada al servicio de Java
-    this.turnos = [
-      {
-        comercio: 'Comercio A',
-        servicio: 'Servicio X',
-        fecha: '2025-08-23',
-        horaInicio: '08:00',
-        horaFin: '09:00'
-      },
-      {
-        comercio: 'Comercio B',
-        servicio: 'Servicio Y',
-        fecha: '2025-08-24',
-        horaInicio: '10:00',
-        horaFin: '11:00'
-      }
-    ];
+  ngOnInit(): void {
+    this.loadData();
   }
+
+  loadData() {
+    this.turnosService.listaComercios().subscribe({
+      next: data => this.comercios = data,
+      error: err => console.error('Error cargando comercios', err)
+    });
+
+    this.turnosService.listaServicios().subscribe({
+      next: data => this.servicios = data,
+      error: err => console.error('Error cargando servicios', err)
+    });
+  }
+
+generar() {
+  if (this.form.invalid) return;
+
+  const { comercio, servicio, fechaInicio, fechaFin } = this.form.value;
+  const inicio = new Date(fechaInicio);
+  const fin = new Date(fechaFin);
+
+  const request: GenerarTurnosRequest = {
+    fechaInicio: inicio.toISOString().split('T')[0],
+    fechaFin: fin.toISOString().split('T')[0],
+    id: Number(servicio)
+  };
+
+this.turnosService.listaTurnos(request).subscribe({
+  next: data => {
+    this.turnos = data.filter(t => t.comercioId === Number(comercio));
+    this.cdr.detectChanges(); // fuerza refresco de la vista
+  },
+  error: err => console.error('Error generando turnos', err)
+});
+
+}
+
+
 }

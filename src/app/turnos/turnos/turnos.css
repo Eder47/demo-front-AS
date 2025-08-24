@@ -56,11 +56,11 @@ label {
 }
 
 
-.btn-generar:hover:not(:enabled) {
+.btn-generar:hover:not(:disabled) {
   background: #0d47a1;
 }
 
-.btn-generar:enabled {
+.btn-generar:disabled {
   background: #ccc;
   cursor: not-allowed;
 }

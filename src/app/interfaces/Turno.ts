@@ -4,5 +4,6 @@ export interface Turno {
   horaFin: string;
   estado: string;
   nombreServicio: string;
+  nombreComercio: string;
   comercioId: number;
 }
